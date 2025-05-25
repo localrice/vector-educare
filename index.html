@@ -42,19 +42,47 @@
             <h1>Events</h1>
             <div class="line line-animate"></div>
         </div>
-        <div class="events-grid">
-            <div class="event-card">
-                <img src="images/event1.jpeg" alt="New Batch Event">
-                <div class="event-info">
-                    <h2>New Batch Announced!</h2>
-                    <p>Admissions open for the 2024-25 session. Enroll now to secure your seat and get early bird benefits.</p>
-                    <div class="event-date">
-                        <span class="event-date-label">Start Date:</span>
-                        <span class="event-date-value">15 July 2024</span>
+        <div class="events-horizontal-scroll">
+            <button class="carousel-btn prev" aria-label="Previous Event">&#10094;</button>
+            <div class="events-scroll-track" tabindex="0">
+                <!-- Add as many .event-card as needed -->
+                <div class="event-card">
+                    <img src="images/event1.jpeg" alt="New Batch Event">
+                    <div class="event-info">
+                        <h2>New Batch Announced!</h2>
+                        <p>Admissions open for the 2024-25 session. Enroll now to secure your seat and get early bird benefits.</p>
+                        <div class="event-date">
+                            <span class="event-date-label">Start Date:</span>
+                            <span class="event-date-value">15 July 2024</span>
+                        </div>
                     </div>
                 </div>
+                <div class="event-card">
+                    <img src="images/background.jpg" alt="Workshop Event">
+                    <div class="event-info">
+                        <h2>Science Workshop</h2>
+                        <p>Join our hands-on science workshop for all classes. Limited seats available!</p>
+                        <div class="event-date">
+                            <span class="event-date-label">Date:</span>
+                            <span class="event-date-value">22 June 2024</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <img src="images/background.jpg" alt="Workshop Event">
+                    <div class="event-info">
+                        <h2>Science Workshop</h2>
+                        <p>Join our hands-on science workshop for all classes. Limited seats available!</p>
+                        <div class="event-date">
+                            <span class="event-date-label">Date:</span>
+                            <span class="event-date-value">22 June 2024</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Add more event-card divs here as needed -->
             </div>
-            <!-- Add more event-card divs here as needed -->
+            <button class="carousel-btn next" aria-label="Next Event">&#10095;</button>
         </div>
     </section>
 
@@ -195,6 +223,7 @@
     </footer>
 
     <script>
+
         const menuBtn = document.querySelector('.menu-btn');
         const navlinks = document.querySelector('.nav-links');
         const logo = document.querySelector('.logo');
@@ -320,6 +349,53 @@
                 }, 700);
             });
         }
+
+        // Mobile-friendly horizontal scrollable events carousel
+        (function() {
+            const track = document.querySelector('.events-scroll-track');
+            const cards = Array.from(track.querySelectorAll('.event-card'));
+            const prevBtn = document.querySelector('.carousel-btn.prev');
+            const nextBtn = document.querySelector('.carousel-btn.next');
+            let current = 0;
+
+            function scrollToCard(idx) {
+                if (!cards[idx]) return;
+                cards[idx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
+
+            function goto(idx) {
+                current = Math.max(0, Math.min(cards.length - 1, idx));
+                scrollToCard(current);
+            }
+
+            if (prevBtn && nextBtn && cards.length > 0) {
+                prevBtn.addEventListener('click', () => goto(current - 1));
+                nextBtn.addEventListener('click', () => goto(current + 1));
+                // Touch/drag support (native scroll works on mobile)
+                // Keyboard support
+                track.addEventListener('keydown', e => {
+                    if (e.key === 'ArrowLeft') goto(current - 1);
+                    if (e.key === 'ArrowRight') goto(current + 1);
+                });
+            }
+
+            // Update current index on manual scroll (for button sync)
+            track.addEventListener('scroll', () => {
+                let minDist = Infinity, idx = 0;
+                cards.forEach((card, i) => {
+                    const rect = card.getBoundingClientRect();
+                    const center = rect.left + rect.width / 2;
+                    const viewportCenter = window.innerWidth / 2;
+                    const dist = Math.abs(center - viewportCenter);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        idx = i;
+                    }
+                });
+                current = idx;
+            });
+        })();
+
     </script>
 
     
