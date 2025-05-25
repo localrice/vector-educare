@@ -355,10 +355,10 @@
             scrollBtn.addEventListener('click', function() {
                 scrollBtn.classList.add('fade-out');
                 setTimeout(() => {
-                    // Scroll to the top of the Events section, minus a small offset for spacing
+                    // Scroll to the top of the Events section, minus a larger offset for spacing
                     const nextSection = document.querySelector('section');
                     if (nextSection) {
-                        const y = nextSection.getBoundingClientRect().top + window.scrollY - 100; // 32px offset
+                        const y = nextSection.getBoundingClientRect().top + window.scrollY - 180; // was 100, now 180px offset
                         window.scrollTo({ top: y, behavior: 'smooth' });
                     }
                 }, 150);
