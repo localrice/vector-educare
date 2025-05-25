@@ -222,6 +222,24 @@
         </div>
     </footer>
 
+    <!-- Event Detail Modal -->
+    <div id="event-modal" class="event-modal">
+        <div class="event-modal-content">
+            <button class="event-modal-close" aria-label="Close">&times;</button>
+            <div class="event-modal-image-container">
+                <img id="event-modal-image" src="" alt="Event Image" />
+            </div>
+            <div class="event-modal-info">
+                <h2 id="event-modal-title"></h2>
+                <p id="event-modal-desc"></p>
+                <div class="event-date">
+                    <span class="event-date-label" id="event-modal-date-label"></span>
+                    <span class="event-date-value" id="event-modal-date-value"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
 
         const menuBtn = document.querySelector('.menu-btn');
@@ -394,6 +412,146 @@
                 });
                 current = idx;
             });
+        })();
+
+        // Event Card Modal Popup with Image Zoom/Pan
+        (function() {
+            const modal = document.getElementById('event-modal');
+            const modalImg = document.getElementById('event-modal-image');
+            const modalTitle = document.getElementById('event-modal-title');
+            const modalDesc = document.getElementById('event-modal-desc');
+            const modalDateLabel = document.getElementById('event-modal-date-label');
+            const modalDateValue = document.getElementById('event-modal-date-value');
+            const closeBtn = document.querySelector('.event-modal-close');
+            const cards = document.querySelectorAll('.event-card');
+
+            // Open modal on card click
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const img = card.querySelector('img');
+                    const title = card.querySelector('.event-info h2');
+                    const desc = card.querySelector('.event-info p');
+                    const dateLabel = card.querySelector('.event-date-label');
+                    const dateValue = card.querySelector('.event-date-value');
+                    modalImg.src = img.src;
+                    modalImg.alt = img.alt;
+                    modalTitle.textContent = title ? title.textContent : '';
+                    modalDesc.textContent = desc ? desc.textContent : '';
+                    modalDateLabel.textContent = dateLabel ? dateLabel.textContent : '';
+                    modalDateValue.textContent = dateValue ? dateValue.textContent : '';
+                    modal.classList.add('show');
+                    document.body.classList.add('modal-open');
+                    resetZoom();
+                });
+            });
+
+            // Close modal
+            function closeModal() {
+                modal.classList.remove('show');
+                document.body.classList.remove('modal-open');
+            }
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', e => {
+                if (e.target === modal) closeModal();
+            });
+            document.addEventListener('keydown', e => {
+                if (modal.classList.contains('show') && (e.key === 'Escape' || e.key === 'Esc')) closeModal();
+            });
+
+            // Image zoom/pan logic
+            let scale = 1, originX = 0, originY = 0, startX = 0, startY = 0, isPanning = false;
+            let pinchStartDist = null, pinchStartScale = 1, pinchStartOrigin = null;
+
+            function getTouchDist(e) {
+                const [t1, t2] = e.touches;
+                const dx = t2.clientX - t1.clientX;
+                const dy = t2.clientY - t1.clientY;
+                return Math.sqrt(dx * dx + dy * dy);
+            }
+            function getTouchMid(e) {
+                const [t1, t2] = e.touches;
+                return {
+                    x: (t1.clientX + t2.clientX) / 2,
+                    y: (t1.clientY + t2.clientY) / 2
+                };
+            }
+
+            function resetZoom() {
+                scale = 1; originX = 0; originY = 0;
+                modalImg.style.transform = '';
+            }
+            modalImg.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                const delta = e.deltaY < 0 ? 0.15 : -0.15;
+                scale = Math.min(Math.max(1, scale + delta), 4);
+                modalImg.style.transform = `scale(${scale}) translate(${originX}px,${originY}px)`;
+            }, { passive: false });
+
+            modalImg.addEventListener('mousedown', function(e) {
+                if (scale === 1) return;
+                isPanning = true;
+                startX = e.clientX - originX;
+                startY = e.clientY - originY;
+                modalImg.style.cursor = 'grabbing';
+            });
+            window.addEventListener('mousemove', function(e) {
+                if (!isPanning) return;
+                originX = e.clientX - startX;
+                originY = e.clientY - startY;
+                modalImg.style.transform = `scale(${scale}) translate(${originX}px,${originY}px)`;
+            });
+            window.addEventListener('mouseup', function() {
+                isPanning = false;
+                modalImg.style.cursor = '';
+            });
+
+            // Touch support for pan and pinch-zoom
+            let lastTouch = null;
+            modalImg.addEventListener('touchstart', function(e) {
+                if (e.touches.length === 2) {
+                    pinchStartDist = getTouchDist(e);
+                    pinchStartScale = scale;
+                    pinchStartOrigin = getTouchMid(e);
+                } else if (e.touches.length === 1 && scale > 1) {
+                    lastTouch = e.touches[0];
+                }
+            }, { passive: false });
+
+            modalImg.addEventListener('touchmove', function(e) {
+                if (e.touches.length === 2) {
+                    e.preventDefault();
+                    const dist = getTouchDist(e);
+                    let newScale = Math.min(Math.max(1, pinchStartScale * (dist / pinchStartDist)), 4);
+                    // Optional: zoom towards pinch center
+                    scale = newScale;
+                    modalImg.style.transform = `scale(${scale}) translate(${originX}px,${originY}px)`;
+                } else if (e.touches.length === 1 && lastTouch && scale > 1) {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    originX += touch.clientX - lastTouch.clientX;
+                    originY += touch.clientY - lastTouch.clientY;
+                    modalImg.style.transform = `scale(${scale}) translate(${originX}px,${originY}px)`;
+                    lastTouch = touch;
+                }
+            }, { passive: false });
+
+            modalImg.addEventListener('touchend', function(e) {
+                if (e.touches.length === 0) {
+                    lastTouch = null;
+                    pinchStartDist = null;
+                    pinchStartOrigin = null;
+                }
+                // Double tap to reset zoom
+                if (e.touches.length === 0 && e.changedTouches.length === 1) {
+                    if (modalImg._lastTap && Date.now() - modalImg._lastTap < 350) {
+                        resetZoom();
+                    }
+                    modalImg._lastTap = Date.now();
+                }
+            });
+
+            // Double click/double tap to reset zoom
+            modalImg.addEventListener('dblclick', resetZoom);
         })();
 
     </script>
