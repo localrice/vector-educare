@@ -1354,9 +1354,6 @@ body.no-scroll {
 /* Prevent background scroll when modal is open */
 body.modal-open {
     overflow: hidden !important;
-    height: 100vh;
-    position: fixed;
-    width: 100vw;
 }
 
 /* Responsive */
