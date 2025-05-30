@@ -4,101 +4,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Panel - Add Event</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <style>
-    .admin-form {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 30px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .admin-form h2 {
-      text-align: center;
-      color: #272f6d;
-      margin-bottom: 20px;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    label {
-      font-weight: 500;
-      display: block;
-      margin-bottom: 5px;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      background-color: #f7931f;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    button:hover {
-      background-color: #272f6d;
-    }
-    .events-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-      margin: 40px auto;
-      max-width: 1200px;
-    }
-    .event-card {
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      max-width: 340px;
-    }
-    .event-card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-    .event-info {
-      padding: 15px;
-    }
-    .event-info h3 {
-      color: #272f6d;
-      margin-bottom: 10px;
-    }
-    .event-info p {
-      color: #444;
-      font-size: 0.95rem;
-    }
-    .event-date {
-      font-size: 0.9rem;
-      color: #f7931f;
-      font-weight: 500;
-      margin-top: 8px;
-    }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
 </head>
 <body>
-  <div class="events-grid">
-    {% for event in events %}
-    <div class="event-card">
-      <img src="{{ event['image_url'] }}" alt="Event Image">
-      <div class="event-info">
-        <h3>{{ event['title'] }}</h3>
-        <p>{{ event['description'] }}</p>
-        <div class="event-date">{{ event['date'] }}</div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
 
-  <div class="admin-form">
+<section id="events" class="event-animate show">
+  <div class="title">
+    <h1>Events</h1>
+    <div class="line line-animate"></div>
+  </div>
+  <div class="events-horizontal-scroll">
+    <button class="carousel-btn prev" aria-label="Previous Event">&#10094;</button>
+    <div class="events-scroll-track" tabindex="0">
+      {% for event in events %}
+      <div class="event-card">
+        <img src="{{ event['image_url'] }}" alt="{{ event['title'] }}">
+        <div class="event-info">
+          <h2>{{ event['title'] }}</h2>
+          <p>{{ event['description'] }}</p>
+          <div class="event-date">
+            <span class="event-date-label">Date:</span>
+            <span class="event-date-value">{{ event['date'] }}</span>
+          </div>
+          <form action="{{ url_for('delete_event', event_id=event['id']) }}" method="POST" style="margin-top:10px;">
+            <button class="delete" type="submit" onclick="return confirm('Delete this event?')">Delete</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-btn next" aria-label="Next Event">&#10095;</button>
+  </div>
+</section>
+
+<div class="admin-form">
     <h2>Add New Event</h2>
     <form action="/admin/event" method="POST" enctype="multipart/form-data">
       <div class="form-group">
@@ -120,5 +61,138 @@
       <button type="submit">Add Event</button>
     </form>
   </div>
+<div class="line "></div>
+
+
+<section id="teachers" class="event-animate show">
+  <div class="title">
+    <h1>Teachers</h1>
+    <div class="line line-animate"></div>
+  </div>
+  <div class="events-horizontal-scroll">
+    <button class="carousel-btn prev" aria-label="Previous Teacher">&#10094;</button>
+    <div class="events-scroll-track" id="teachers-scroll-track" tabindex="0">
+      {% for teacher in teachers %}
+      <div class="teacher-card">
+        <img src="{{ teacher['image_url'] }}" alt="{{ teacher['name'] }}">
+        <span class="teacher-subject">{{ teacher['subject'] }}</span>
+        <p>{{ teacher['name'] }}</p>
+        <div class="teacher-details">
+          {% for faculty in teacher['faculties'].split(',') %}
+          <span class="teacher-faculty">{{ faculty.strip() }}</span>
+          {% endfor %}
+          <span class="teacher-exp">{{ teacher['experience'] }}</span>
+        </div>
+        <form action="{{ url_for('delete_teacher', teacher_id=teacher['id']) }}" method="POST" style="margin-top:10px;">
+          <button class="delete" type="submit" onclick="return confirm('Delete this teacher?')">Delete</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-btn next" aria-label="Next Teacher">&#10095;</button>
+  </div>
+</section>
+<div class="admin-form">
+  <h2>Add New Teacher</h2>
+  <form action="/admin/teacher" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" name="name" id="name" required>
+    </div>
+    <div class="form-group">
+      <label for="subject">Subject:</label>
+      <input type="text" name="subject" id="subject" required>
+    </div>
+    <div class="form-group">
+      <label for="faculties">Faculties (comma separated):</label>
+      <input type="text" name="faculties" id="faculties" required>
+    </div>
+    <div class="form-group">
+      <label for="experience">Experience:</label>
+      <input type="text" name="experience" id="experience" required>
+    </div>
+    <div class="form-group">
+      <label for="image">Image:</label>
+      <input type="file" name="image" id="image" accept="image/*" required>
+    </div>
+    <button type="submit">Add Teacher</button>
+  </form>
+</div>
+<div class="line "></div>
+<div class="admin-form">
+  <h2>Edit Contact Info</h2>
+  <form action="{{ url_for('update_contact') }}" method="POST">
+    <div class="form-group">
+      <label for="phone1">Phone 1:</label>
+      <input type="text" name="phone1" id="phone1" value="{{ contact_info.phone1 }}" required>
+    </div>
+    <div class="form-group">
+      <label for="phone2">Phone 2:</label>
+      <input type="text" name="phone2" id="phone2" value="{{ contact_info.phone2 }}" required>
+    </div>
+    <div class="form-group">
+      <label for="whatsapp">WhatsApp Number:</label>
+      <input type="text" name="whatsapp" id="whatsapp" value="{{ contact_info.whatsapp }}" required>
+    </div>
+    <button type="submit">Save Contact Info</button>
+  </form>
+</div>
+
+  <script>
+(function() {
+    const track = document.querySelector('.events-scroll-track');
+    const cards = Array.from(track.querySelectorAll('.event-card'));
+    const prevBtn = document.querySelector('.carousel-btn.prev');
+    const nextBtn = document.querySelector('.carousel-btn.next');
+    let current = 0;
+
+    function scrollToCard(idx) {
+        if (!cards[idx]) return;
+        cards[idx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
+    function goto(idx) {
+        current = Math.max(0, Math.min(cards.length - 1, idx));
+        scrollToCard(current);
+    }
+
+    if (prevBtn && nextBtn && cards.length > 0) {
+        prevBtn.addEventListener('click', () => goto(current - 1));
+        nextBtn.addEventListener('click', () => goto(current + 1));
+        track.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') goto(current - 1);
+            if (e.key === 'ArrowRight') goto(current + 1);
+        });
+    }
+
+    track.addEventListener('scroll', () => {
+        let minDist = Infinity, idx = 0;
+        cards.forEach((card, i) => {
+            const rect = card.getBoundingClientRect();
+            const center = rect.left + rect.width / 2;
+            const viewportCenter = window.innerWidth / 2;
+            const dist = Math.abs(center - viewportCenter);
+            if (dist < minDist) {
+                minDist = dist;
+                idx = i;
+            }
+        });
+        current = idx;
+    });
+})();
+(function() {
+        const track = document.querySelector('.events-scroll-track');
+        if (track && track.querySelectorAll('.event-card').length === 1) {
+            track.classList.add('single-card');
+        }
+    })();
+(function() {
+        const track = document.getElementById('teachers-scroll-track');
+        if (track && track.querySelectorAll('.teacher-card').length === 1) {
+            track.classList.add('single-card');
+        }
+    })();
+</script>
+
 </body>
 </html>

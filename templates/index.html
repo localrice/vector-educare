@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vector Educare</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -74,44 +75,19 @@
         </div>
         <div class="teachers-wrapper">
             <div class="teachers-grid">
+                {% for teacher in teachers %}
                 <div class="teacher-card">
-                    <img src="images/1.jpg" alt="Teacher 1">
-                    <span class="teacher-subject">BIOLOGY</span>
-                    <p>R.S. YADAV SIR</p>
+                    <img src="{{ teacher['image_url'] }}" alt="Teacher {{ loop.index }}">
+                    <span class="teacher-subject">{{ teacher['subject'] }}</span>
+                    <p>{{ teacher['name'] }}</p>
                     <div class="teacher-details">
-                        <span class="teacher-faculty">Ex-Faculty- New Light Institute, Kanpur</span>
-                        <span class="teacher-faculty">Ex-Faculty- Career Point Kota, Vns</span>
-                        <span class="teacher-exp">30 years</span>
+                        {% for faculty in teacher['faculties'].split(',') %}
+                        <span class="teacher-faculty">{{ faculty.strip() }}</span>
+                        {% endfor %}
+                        <span class="teacher-exp">{{ teacher['experience'] }}</span>
                     </div>
                 </div>
-                <div class="teacher-card">
-                    <img src="images/2.jpg" alt="Teacher 2">
-                    <span class="teacher-subject">PHYSICS</span>
-                    <p>Er. MUKESH SIR</p>
-                    <div class="teacher-details">
-                        <span class="teacher-faculty">Ex-Faculty- Narayana, New Delhi</span>
-                        <span class="teacher-exp">13 years</span>
-                    </div>
-                </div>
-                <div class="teacher-card">
-                    <img src="images/3.jpg" alt="Teacher 3">
-                    <span class="teacher-subject">CHEMISTRY</span>
-                    <p>Er. RAJESH SIR</p>
-                    <div class="teacher-details">
-                        <span class="teacher-faculty">Ex-Faculty- Fiit Jee, Noida</span>
-                        <span class="teacher-exp">11 years</span>
-                    </div>
-                </div>
-                <div class="teacher-card">
-                    <img src="images/4.jpg" alt="Teacher 4">
-                    <span class="teacher-subject">MATHEMATICS</span>
-                    <p>Er. DHEERAJ SIR</p>
-                    <div class="teacher-details">
-                        <span class="teacher-faculty">Ex-Faculty- Resonance Educare, Kota</span>
-                        <span class="teacher-faculty">Ex-Faculty- Vibrant Academy, Kota</span>
-                        <span class="teacher-exp">11 years</span>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
@@ -155,17 +131,17 @@
         <div class="contact-container">
             <div class="contact-info">
                 <div class="contact-item">
-                    <a href="tel:+919876543210" class="contact-phone-btn">
-                        <i class="fa fa-phone"></i> Call +91 98765 43210
+                    <a href="tel:{{ contact_info.phone1 }}" class="contact-phone-btn">
+                        <i class="fa fa-phone"></i> Call {{ contact_info.phone1 }}
                     </a>
                 </div>
                 <div class="contact-item">
-                    <a href="tel:+919812345678" class="contact-phone-btn">
-                        <i class="fa fa-phone"></i> Call +91 98123 45678
+                    <a href="tel:{{ contact_info.phone2 }}" class="contact-phone-btn">
+                        <i class="fa fa-phone"></i> Call {{ contact_info.phone2 }}
                     </a>
                 </div>
                 <div class="contact-item">
-                    <a href="whatsapp://send?phone=919876543210&text=Hello%20Vector%20Educare%2C%20I%20would%20like%20to%20know%20more%20about%20your%20courses." 
+                    <a href="whatsapp://send?phone={{ contact_info.whatsapp }}&text=Hello%20Vector%20Educare%2C%20I%20would%20like%20to%20know%20more%20about%20your%20courses." 
                        class="contact-whatsapp-btn"
                        target="_blank" rel="noopener">
                         <i class="fa fa-whatsapp"></i> Chat with us on WhatsApp
@@ -194,10 +170,10 @@
             <div class="footer-title">Vector Educare</div>
             <div>
                 123 Main Road, Varanasi, Uttar Pradesh, India<br>
-                Phone: <a href="tel:+919876543210" style="color:#fff;text-decoration:underline;">+91 98765 43210</a>
+                <!-- Phone: <a href="tel:+919876543210" style="color:#fff;text-decoration:underline;">+91 98765 43210</a> -->
             </div>
             <div class="footer-copy">
-                &copy; 2024 Vector Educare. All rights reserved.
+                &copy; <span id="footer-year"></span> Vector Educare. All rights reserved.
             </div>
         </div>
     </footer>
@@ -533,9 +509,20 @@
             // Double click/double tap to reset zoom
             modalImg.addEventListener('dblclick', resetZoom);
         })();
-
+    </script>
+    <script>
+    // Center single event card in carousel (desktop)
+    (function() {
+        const track = document.querySelector('.events-scroll-track');
+        if (track && track.querySelectorAll('.event-card').length === 1) {
+            track.classList.add('single-card');
+        }
+    })();
+    document.addEventListener('DOMContentLoaded', function() {
+            var yearSpan = document.getElementById('footer-year');
+            if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
     </script>
 
-    
 </body>
 </html>

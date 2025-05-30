@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
+</head>
+<body class="login-page">
+  <form class="login-form" method="POST">
+    <h2>Admin Login</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div class="flash">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <input type="text" name="username" placeholder="Username" required autofocus>
+    <div style="position:relative;">
+      <input type="password" name="password" id="password-input" placeholder="Password" required style="padding-right:38px;">
+      <span id="toggle-password">
+        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24">
+          <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z" stroke="currentColor" stroke-width="2" fill="none"/>
+          <circle id="eye-dot" cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/>
+        </svg>
+      </span>
+    </div>
+    <button type="submit">Login</button>
+  </form>
+  <script>
+    // Show/hide password with eye icon
+    const pwd = document.getElementById('password-input');
+    const toggle = document.getElementById('toggle-password');
+    let visible = false;
+    toggle.addEventListener('click', function() {
+      visible = !visible;
+      pwd.type = visible ? 'text' : 'password';
+      // Toggle eye icon (simple open/closed effect)
+      document.getElementById('eye-icon').innerHTML = visible
+        ? `<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z" stroke="currentColor" stroke-width="2" fill="none"/>
+           <circle id="eye-dot" cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="currentColor"/>`
+        : `<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z" stroke="currentColor" stroke-width="2" fill="none"/>
+           <circle id="eye-dot" cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/>`;
+    });
+  </script>
+</body>
+</html>
