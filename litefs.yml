@@ -1,11 +1,11 @@
 fuse:
-  dir: /litefs
+  dir: "/litefs"
 
 data:
-  dir: /var/lib/litefs
+  dir: "/var/lib/litefs"
 
 exec:
-  -cmd: "python app.py"
+  command: "python app.py"
 
 lease:
   type: "consul"
