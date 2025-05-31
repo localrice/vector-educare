@@ -1,0 +1,12 @@
+fuse:
+  dir: /litefs
+
+data:
+  dir: /var/lib/litefs
+
+exec:
+  -cmd: "python app.py"
+
+lease:
+  type: "consul"
+  host: "fly"
