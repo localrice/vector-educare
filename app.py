@@ -2,12 +2,14 @@ from flask import Flask, request, redirect, render_template, url_for, session, f
 import os
 import sqlite3
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-DB = '/litefs/data.db'
+DB = 'data.db'
 
 def check_env_vars(var_list):
     missing = [var for var in var_list if var not in os.environ]
