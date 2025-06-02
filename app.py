@@ -53,7 +53,7 @@ def init_db():
         # Ensure a default row exists
         c.execute('INSERT OR IGNORE INTO contact_info (id, phone1, phone2, whatsapp) VALUES (1, "", "", "")')
         conn.commit()
-
+init_db()
 def login_required(f):
     from functools import wraps
     @wraps(f)
@@ -303,6 +303,5 @@ def update_contact():
     flash('Contact info updated!', 'success')
     return redirect(url_for('admin_page'))
 
-if __name__ == '__main__':
-    init_db()
-    app.run(host="0.0.0.0",port=8080)
+
+
