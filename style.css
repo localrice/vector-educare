@@ -1359,30 +1359,104 @@ body.modal-open {
     width: 100vw;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-    .event-modal-content {
-        width: 98vw;
+/* Inquiry Section */
+#inquiry {
+    width: 100%;
+    max-width: 600px;
+    margin: 60px auto 80px auto;
+    background: rgba(255,255,255,0.95);
+    border-radius: 18px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    padding: 36px 32px 32px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#inquiry .title {
+    margin-bottom: 24px;
+    background: none;
+    padding: 0;
+}
+
+#inquiry-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: stretch;
+}
+
+#inquiry-form div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+#inquiry-form label {
+    font-size: 1.08rem;
+    color: #272f6d;
+    font-weight: 500;
+    margin-bottom: 2px;
+    letter-spacing: 0.2px;
+}
+
+#inquiry-form input[type="text"],
+#inquiry-form input[type="email"],
+#inquiry-form input[type="tel"] {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #f7931f;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    background: #fff;
+    color: #272f6d;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+    margin-bottom: 2px;
+}
+
+#inquiry-form input:focus {
+    border-color: #272f6d;
+    box-shadow: 0 2px 8px rgba(39,47,109,0.08);
+}
+
+#inquiry-form button[type="submit"] {
+    margin-top: 10px;
+    padding: 12px 0;
+    background: #f7931f;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.13rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(248,147,31,0.08);
+    letter-spacing: 0.5px;
+}
+
+#inquiry-form button[type="submit"]:hover,
+#inquiry-form button[type="submit"]:focus {
+    background: #272f6d;
+    color: #fff;
+}
+
+@media (max-width: 700px) {
+    #inquiry {
+        padding: 22px 8vw 22px 8vw;
+        margin: 40px auto 50px auto;
         max-width: 98vw;
-        min-width: unset;
+    }
+    #inquiry-form button[type="submit"] {
         font-size: 1rem;
+        padding: 10px 0;
     }
-    .event-modal-image-container {
-        height: auto;
-        min-height: 0;
-        padding: 0;
-    }
-    .event-modal-info {
-        font-size: 1rem;
-        padding: 1rem 0.7rem 0.5rem 0.7rem;
-    }
-    .event-modal-info h2 {
-        font-size: 1.2rem;
-    }
-    .event-modal-info p {
+    #inquiry-form input[type="text"],
+    #inquiry-form input[type="email"],
+    #inquiry-form input[type="tel"] {
         font-size: 0.98rem;
-    }
-    .event-modal-info .event-date {
-        font-size: 0.95rem;
+        padding: 8px 10px;
     }
 }
