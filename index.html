@@ -48,38 +48,17 @@
             <div class="events-scroll-track" tabindex="0">
                 <!-- Add as many .event-card as needed -->
                 <div class="event-card">
-                    <img src="images/event1.jpeg" alt="New Batch Event">
-                    <div class="event-info">
-                        <h2>New Batch Announced!</h2>
-                        <p>Admissions open for the 2024-25 session. Enroll now to secure your seat and get early bird benefits.</p>
-                        <div class="event-date">
-                            <span class="event-date-label">Start Date:</span>
-                            <span class="event-date-value">15 July 2024</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="event-card">
                     <img src="images/background.jpg" alt="Workshop Event">
                     <div class="event-info">
-                        <h2>Science Workshop</h2>
-                        <p>Join our hands-on science workshop for all classes. Limited seats available!</p>
+                        <h2>Vector Educare</h2>
+                        <p>New JEE & NEET batch launched at Vector Educare — learn from expert faculty and start your journey to success!</p>
                         <div class="event-date">
                             <span class="event-date-label">Date:</span>
-                            <span class="event-date-value">22 June 2024</span>
+                            <span class="event-date-value">2025</span>
                         </div>
                     </div>
                 </div>
-                <div class="event-card">
-                    <img src="images/background.jpg" alt="Workshop Event">
-                    <div class="event-info">
-                        <h2>Science Workshop</h2>
-                        <p>Join our hands-on science workshop for all classes. Limited seats available!</p>
-                        <div class="event-date">
-                            <span class="event-date-label">Date:</span>
-                            <span class="event-date-value">22 June 2024</span>
-                        </div>
-                    </div>
-                </div>
+                
                 
                 <!-- Add more event-card divs here as needed -->
             </div>
@@ -577,7 +556,12 @@
             // Double click/double tap to reset zoom
             modalImg.addEventListener('dblclick', resetZoom);
         })();
-
+    (function() {
+        const track = document.querySelector('.events-scroll-track');
+        if (track && track.querySelectorAll('.event-card').length === 1) {
+            track.classList.add('single-card');
+        }
+    })();
     </script>
 
     

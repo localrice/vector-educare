@@ -1460,3 +1460,7 @@ body.modal-open {
         padding: 8px 10px;
     }
 }
+.events-scroll-track.single-card {
+    justify-content: center;
+    display: flex !important;
+}
